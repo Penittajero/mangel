@@ -1,0 +1,58 @@
+class calculator:
+  def add(self,a,b):
+    print(a+b)
+  def sub(self,a,b):
+    print(a-b)
+  def mul(self,a,b):
+    print(a*b)
+  def div(self,a,b):
+    if b==0:
+      print("Invalid option")
+    else:
+      print(a/b)
+  def __init__(self,a,b):
+   #def menudriven(self,a,b):
+     op=int(input("Enter your option:(1.Add\n2.Sub\n3.Mul\n4.Div)\n"))
+     if(op==1):
+       self.add(a,b)
+     elif(op==2):
+      self.sub(a,b)
+     elif(op==3):
+      self.mul(a,b)
+     elif(op==4):
+      self.div(a,b)
+     else:
+      print("Invalid option")
+class scientificcalculator(calculator):
+  def power(self,a,b):
+    print(a**b)
+  def factorial(self,a):
+    fact=1
+    for i in range(1,a+1):
+      fact=fact*i
+    print(fact)
+
+  def __init__(self,a,b):
+    sc=int(input("Enter your option(\n1.power\n2.factorial:)\n"))
+    if sc==1:
+      self.power(a,b)
+    elif sc==2:
+      print("The factorial of a is:")
+      self.factorial(a)
+    else:
+      print("Invalid option")
+
+ON="Yes"
+while ON=="Yes":
+  option=int(input("Enter your option (\n1.scientificcalcularor(power,factorial)\n2.simplecalculator\n3.EXIT:\n"))
+  a=int(input("Enter a number a:"))
+  b=int(input("Enter a number b:"))
+  if option==1:
+    obj1=scientificcalculator(a,b)
+
+  elif option==2:
+    obj=calculator(a,b)
+  elif option==3:
+    ON=no
+  else:
+    print("Invalid option try again")
