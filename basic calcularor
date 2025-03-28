@@ -1,58 +1,83 @@
-class calculator:
-  def add(self,a,b):
-    print(a+b)
-  def sub(self,a,b):
-    print(a-b)
-  def mul(self,a,b):
-    print(a*b)
-  def div(self,a,b):
-    if b==0:
-      print("Invalid option")
+import sqlite3
+
+# Database connection
+conn = sqlite3.connect("hardware_store.db")
+cursor = conn.cursor()
+
+# Create table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS inventory (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        item_name TEXT NOT NULL,
+        category TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
+        price REAL NOT NULL
+    )
+''')
+conn.commit()
+
+# Functions to manage inventory
+def add_item(name, category, quantity, price):
+    cursor.execute("INSERT INTO inventory (item_name, category, quantity, price) VALUES (?, ?, ?, ?)",
+                   (name, category, quantity, price))
+    conn.commit()
+    print(f"Item '{name}' added successfully!")
+
+def update_item(item_id, quantity, price):
+    cursor.execute("UPDATE inventory SET quantity = ?, price = ? WHERE id = ?",
+                   (quantity, price, item_id))
+    conn.commit()
+    print("Item updated successfully!")
+
+def delete_item(item_id):
+    cursor.execute("DELETE FROM inventory WHERE id = ?", (item_id,))
+    conn.commit()
+    print("Item deleted successfully!")
+
+def view_inventory():
+    cursor.execute("SELECT * FROM inventory")
+    items = cursor.fetchall()
+    if items:
+        print("\nInventory:")
+        print("ID | Name | Category | Quantity | Price")
+        for item in items:
+            print(f"{item[0]} | {item[1]} | {item[2]} | {item[3]} | ${item[4]:.2f}")
     else:
-      print(a/b)
-  def __init__(self,a,b):
-   #def menudriven(self,a,b):
-     op=int(input("Enter your option:(1.Add\n2.Sub\n3.Mul\n4.Div)\n"))
-     if(op==1):
-       self.add(a,b)
-     elif(op==2):
-      self.sub(a,b)
-     elif(op==3):
-      self.mul(a,b)
-     elif(op==4):
-      self.div(a,b)
-     else:
-      print("Invalid option")
-class scientificcalculator(calculator):
-  def power(self,a,b):
-    print(a**b)
-  def factorial(self,a):
-    fact=1
-    for i in range(1,a+1):
-      fact=fact*i
-    print(fact)
+        print("No items in inventory.")
 
-  def __init__(self,a,b):
-    sc=int(input("Enter your option(\n1.power\n2.factorial:)\n"))
-    if sc==1:
-      self.power(a,b)
-    elif sc==2:
-      print("The factorial of a is:")
-      self.factorial(a)
-    else:
-      print("Invalid option")
+def main():
+    while True:
+        print("\nHardware Store Management System")
+        print("1. Add Item")
+        print("2. Update Item")
+        print("3. Delete Item")
+        print("4. View Inventory")
+        print("5. Exit")
+        
+        choice = input("Enter choice: ")
+        if choice == "1":
+            name = input("Enter item name: ")
+            category = input("Enter category: ")
+            quantity = int(input("Enter quantity: "))
+            price = float(input("Enter price: "))
+            add_item(name, category, quantity, price)
+        elif choice == "2":
+            item_id = int(input("Enter item ID to update: "))
+            quantity = int(input("Enter new quantity: "))
+            price = float(input("Enter new price: "))
+            update_item(item_id, quantity, price)
+        elif choice == "3":
+            item_id = int(input("Enter item ID to delete: "))
+            delete_item(item_id)
+        elif choice == "4":
+            view_inventory()
+        elif choice == "5":
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice! Please try again.")
 
-ON="Yes"
-while ON=="Yes":
-  option=int(input("Enter your option (\n1.scientificcalcularor(power,factorial)\n2.simplecalculator\n3.EXIT:\n"))
-  a=int(input("Enter a number a:"))
-  b=int(input("Enter a number b:"))
-  if option==1:
-    obj1=scientificcalculator(a,b)
+if __name__ == "__main__":
+    main()
+    conn.close()
 
-  elif option==2:
-    obj=calculator(a,b)
-  elif option==3:
-    ON=no
-  else:
-    print("Invalid option try again")
